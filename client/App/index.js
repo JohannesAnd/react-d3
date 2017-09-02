@@ -14,13 +14,7 @@ export default class App extends React.Component {
 
   render() {
     const data = {
-      lines: [
-        { color: "yellow", points: [{ x: 30, y: 50 }, { x: 5, y: 4 }] },
-        {
-          color: "green",
-          points: [{ x: this.state.value, y: 30 }, { x: 5, y: 4 }]
-        }
-      ]
+      lines: require("../../stuff.json")
     };
 
     return (

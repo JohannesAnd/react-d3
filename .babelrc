@@ -6,7 +6,8 @@
       {
         "alias": {
           "client": "./client",
-          "components": "./components"
+          "components": "./components",
+          "scripts": "./scripts"
         }
       }
     ]

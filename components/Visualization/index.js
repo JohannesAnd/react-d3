@@ -3,11 +3,11 @@ import { create, update, destroy } from "./visualization";
 
 export default class Visualization extends React.Component {
   componentDidMount() {
-    create(this.svg);
+    create(this.svg, this.props);
   }
 
   componentDidUpdate() {
-    update(this.svg, this.props.data);
+    update(this.svg, this.props);
   }
 
   componentWillUnmount() {
