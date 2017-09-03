@@ -1,30 +1,55 @@
 import React from "react";
-import { Wrapper } from "./elements";
+import { Wrapper, Input } from "./elements";
 import Visualization from "components/Visualization";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: 0 };
+    this.state = { width: 0, height: 0, value: "y", text: "Depth" };
+    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
   }
 
-  onChangeHandler(e) {
-    this.setState({ value: e.target.value });
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener("resize", this.updateWindowDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateWindowDimensions);
+  }
+
+  onChangeHandler() {
+    if (this.state.value === "y") {
+      this.setState({ value: "age", text: "Age" });
+    } else {
+      this.setState({ value: "y", text: "Depth" });
+    }
+    console.log(this.state.value);
+  }
+
+  updateWindowDimensions() {
+    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   render() {
     const data = {
-      lines: require("../../stuff.json")
+      lines: require("../../stuff.json"),
+      yKey: this.state.value
     };
 
     return (
       <Wrapper>
-        <input
-          type={"range"}
-          onChange={this.onChangeHandler.bind(this)}
-          value={this.state.value}
+        <Input
+          type={"button"}
+          onClick={this.onChangeHandler.bind(this)}
+          value={this.state.text}
         />
-        <Visualization id={1} width={300} height={300} data={data} />
+        <Visualization
+          id={1}
+          width={this.state.width}
+          height={Math.max(this.state.height - 30, 0)}
+          data={data}
+        />
       </Wrapper>
     );
   }

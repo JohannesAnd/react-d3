@@ -1,3 +1,17 @@
+const chronostrat = [
+  { name: "quaternary", age: [0, 2.588], color: "#fff673" },
+  { name: "neogene", age: [2.588, 23.03], color: "#ffd310" },
+  { name: "paleogene", age: [23.03, 66.0], color: "#ff8552" },
+  { name: "cretaceous", age: [66.0, 145], color: "#63ae53" },
+  { name: "jurrasic", age: [145, 201.3], color: "#0096d5" },
+  { name: "triassic", age: [201.3, 252.2], color: "#63347c" },
+  { name: "permian", age: [252.2, 298.9], color: "#dd4530" },
+  { name: "carboniferous", age: [298.9, 358.9], color: "#218e93" }
+].reduce((acc, el) => {
+  acc[el.name] = { age: el.age, color: el.color };
+  return acc;
+}, {});
+
 module.exports = data => {
   return data
     .split("<polyline")
@@ -6,24 +20,43 @@ module.exports = data => {
       const id = getId(el);
 
       if (!points || !id) return null;
+      if (id.substring(0, 6) === "fault-") {
+        return {
+          id,
+          color: "black",
+          type: "fault",
+          points: parsePoints(points)
+        };
+      }
 
       return {
         id,
-        points: parsePoints(points),
-        type: id.substring(0, 10) === 'id="fault-' ? "fault" : "layer"
+        color:
+          id.split("-")[1] in chronostrat
+            ? chronostrat[id.split("-")[1]].color
+            : "black",
+        points: parsePoints(points, {
+          age:
+            id.split("-")[1] in chronostrat
+              ? chronostrat[id.split("-")[1]].age[0]
+              : 0
+        }),
+        type: "layer"
       };
     })
     .filter(el => el);
 };
 
-function parsePoints(points) {
+function parsePoints(points, extra = {}) {
   const split = points.split(" ");
   const result = [];
   for (let i = 0; i < split.length - 1; i += 2) {
-    result.push({
-      x: removePreZeroes(split[i]),
-      y: removePreZeroes(split[i + 1])
-    });
+    result.push(
+      Object.assign(Object.assign({}, extra), {
+        x: removePreZeroes(split[i]),
+        y: removePreZeroes(split[i + 1])
+      })
+    );
   }
   return result;
 }
