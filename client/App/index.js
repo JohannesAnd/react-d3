@@ -5,17 +5,7 @@ import Visualization from "components/Visualization";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { width: 0, height: 0, value: "y", text: "Depth" };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
-  }
-
-  componentDidMount() {
-    this.updateWindowDimensions();
-    window.addEventListener("resize", this.updateWindowDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateWindowDimensions);
+    this.state = { value: "y", text: "Depth" };
   }
 
   onChangeHandler() {
@@ -24,10 +14,6 @@ export default class App extends React.Component {
     } else {
       this.setState({ value: "y", text: "Depth" });
     }
-  }
-
-  updateWindowDimensions() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight });
   }
 
   render() {
@@ -43,12 +29,7 @@ export default class App extends React.Component {
           onClick={this.onChangeHandler.bind(this)}
           value={this.state.text}
         />
-        <Visualization
-          id={1}
-          width={this.state.width}
-          height={Math.max(this.state.height - 30, 0)}
-          data={data}
-        />
+        <Visualization id={1} data={data} />
       </Wrapper>
     );
   }

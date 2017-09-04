@@ -10,24 +10,23 @@ const margin = {
   right: 10
 };
 
-export const create = (ref, props) => {
+export const create = (ref, props, state) => {
   console.log("created");
 
   const svg = select(ref);
-  update(ref, props);
+  update(ref, props, state);
 };
 
-export const update = (ref, props) => {
+export const update = (ref, props, state) => {
   console.log("updated");
-  const { data, width, height, yKey } = props;
-  console.log(data.yKey);
+  const { data, yKey } = props;
+  const { width, height } = state;
   const maxWidth = Math.max(
     ...data.lines.map(el => Math.max(...el.points.map(p => p.x || 0)))
   );
   const maxHeight = Math.max(
     ...data.lines.map(el => Math.max(...el.points.map(p => p[data.yKey] || 0)))
   );
-  console.log(maxHeight);
 
   // Scales
   const xScale = scaleLinear()

@@ -7,4 +7,4 @@ export const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export const Input = styled.input`height: 30px;`;
+export const Input = styled.input`height: 60px;`;
