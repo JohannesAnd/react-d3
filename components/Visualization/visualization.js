@@ -42,11 +42,14 @@ export const update = (ref, props) => {
 
   // Get the SVG dom-element
   const svg = select(ref);
-  console.log(data.lines);
+
   // make a selection of all lines and bind to data
   const update = svg
     .selectAll(".line")
-    .data(data.lines.filter(d => d.type === "layer"), d => d.id);
+    .data(
+      data.lines.filter(d => (data.yKey === "y" ? true : d.type === "layer")),
+      d => d.id
+    );
 
   // Add new paths if not enough
   const enter = update
@@ -54,16 +57,23 @@ export const update = (ref, props) => {
     .append("path")
     .attr("class", "line")
     .attr("fill", "none")
-    .attr("stroke", d => d.color);
+    .attr("opacity", 0)
+    .attr("stroke", d => d.color || "black");
 
   // Remove paths if too many
-  const exit = update.exit();
+  const exit = update
+    .exit()
+    .transition()
+    .duration(500)
+    .attr("opacity", 0)
+    .remove();
 
   // Update line with color and d-attribute
   update
     .merge(enter)
     .transition()
     .duration(1000)
+    .attr("opacity", 1)
     .attr("d", d => lineGenerator(d.points));
 };
 

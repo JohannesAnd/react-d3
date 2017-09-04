@@ -24,7 +24,6 @@ export default class App extends React.Component {
     } else {
       this.setState({ value: "y", text: "Depth" });
     }
-    console.log(this.state.value);
   }
 
   updateWindowDimensions() {
