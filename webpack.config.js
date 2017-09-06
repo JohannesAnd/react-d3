@@ -18,7 +18,7 @@ module.exports = function() {
           exclude: /node_modules/,
           use: [
             {
-              loader: require.resolve("babel-loader")
+              loader: "babel-loader"
             }
           ]
         }
@@ -32,7 +32,7 @@ module.exports = function() {
     devServer: isProduction
       ? {}
       : {
-          contentBase: path.join(__dirname, "dist")
+          contentBase: path.resolve(__dirname, "dist")
         }
   };
 };

@@ -1,8 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-
-const data = fs.readFileSync(path.resolve(__dirname, "./data.svg"), "utf-8");
-
-const getDataFromSvg = require("./getDataFromSvg");
+const getDataFromSvg = require('./getDataFromSvg');
+const data = require('./data');
 
 console.log(JSON.stringify(getDataFromSvg(data), null, 2));

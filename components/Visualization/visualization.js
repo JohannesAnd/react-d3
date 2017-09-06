@@ -1,7 +1,7 @@
-import { select } from "d3-selection";
-import { line } from "d3-shape";
-import { scaleLinear } from "d3-scale";
-import { transition } from "d3-transition";
+import { select } from 'd3-selection';
+import { line, area } from 'd3-shape';
+import { scaleLinear } from 'd3-scale';
+import { transition } from 'd3-transition';
 
 const margin = {
   top: 10,
@@ -11,14 +11,14 @@ const margin = {
 };
 
 export const create = (ref, props, state) => {
-  console.log("created");
+  console.log('created');
 
   const svg = select(ref);
   update(ref, props, state);
 };
 
 export const update = (ref, props, state) => {
-  console.log("updated");
+  console.log('updated');
   const { data, yKey } = props;
   const { width, height } = state;
   const maxWidth = Math.max(
@@ -37,34 +37,38 @@ export const update = (ref, props, state) => {
     .range([margin.top, height - margin.top - margin.bottom]);
 
   // Creates the d attribute based on array of data
-  const lineGenerator = line().x(d => xScale(d.x)).y(d => yScale(d[data.yKey]));
+  const lineGenerator = line()
+    .x(d => xScale(d.x))
+    .y(d => yScale(d[data.yKey]));
 
   // Get the SVG dom-element
   const svg = select(ref);
 
   // make a selection of all lines and bind to data
   const update = svg
-    .selectAll(".line")
+    .selectAll('.line')
     .data(
-      data.lines.filter(d => (data.yKey === "y" ? true : d.type === "layer")),
+      data.lines.filter(d => (data.yKey === 'y' ? true : d.type === 'layer')),
       d => d.id
     );
 
   // Add new paths if not enough
   const enter = update
     .enter()
-    .append("path")
-    .attr("class", "line")
-    .attr("fill", "none")
-    .attr("opacity", 0)
-    .attr("stroke", d => d.color || "black");
+    .append('path')
+    .attr('class', 'line')
+    .attr('id', d => d.id)
+    .attr('fill', d => (d.type === 'fault' ? 'none' : d.fill || 'black'))
+    .attr('opacity', 0)
+    .attr('stroke', 'black')
+    .attr('stroke-width', '3px');
 
   // Remove paths if too many
   const exit = update
     .exit()
     .transition()
     .duration(500)
-    .attr("opacity", 0)
+    .attr('opacity', 0)
     .remove();
 
   // Update line with color and d-attribute
@@ -72,11 +76,11 @@ export const update = (ref, props, state) => {
     .merge(enter)
     .transition()
     .duration(1000)
-    .attr("opacity", 1)
-    .attr("d", d => lineGenerator(d.points));
+    .attr('opacity', 1)
+    .attr('d', d => lineGenerator(d.points));
 };
 
 export const destroy = ref => {
-  console.log("destroyed");
+  console.log('destroyed');
   const svg = select(ref).remove();
 };
